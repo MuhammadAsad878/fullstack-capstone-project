@@ -1,152 +1,63 @@
+// giftRoutes.js
 const express = require('express');
-const bcryptjs = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const connectToDatabase = require('../models/db');
 const router = express.Router();
-const dotenv = require('dotenv');
-const pino = require('pino');  // Import Pino logger
+const connectToDatabase = require('../models/db');
 
-//Task 1: Use the `body`,`validationResult` from `express-validator` for input validation
-const { body, validationResult } = require('express-validator');
-
-
-const logger = pino();  // Create a Pino logger instance
-
-dotenv.config();
-const JWT_SECRET = process.env.JWT_SECRET;
-
-router.post('/register', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-      //Connect to `giftsdb` in MongoDB through `connectToDatabase` in `db.js`.
-      const db = await connectToDatabase();
-      const collection = db.collection("users");
-      const existingEmail = await collection.findOne({ email: req.body.email });
+        const db = await connectToDatabase(); // Connect to database
 
-        if (existingEmail) {
-            logger.error('Email id already exists');
-            return res.status(400).json({ error: 'Email id already exists' });
-        }
+        // Task 2: use the collection() method to retrieve the gift collection
+        const collection = db.collection("gifts"); // Get the 'gifts' collection
 
-        const salt = await bcryptjs.genSalt(10);
-        const hash = await bcryptjs.hash(req.body.password, salt);
-        const email=req.body.email;
-        console.log('email is',email);
-        const newUser = await collection.insertOne({
-            email: req.body.email,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            password: hash,
-            createdAt: new Date(),
-        });
+        // Task 3: Fetch all gifts using the collection.find method. Chain with toArray method to convert to JSON array
+        const gifts = await collection.find({}).toArray(); // Fetch all gifts
 
-        const payload = {
-            user: {
-                id: newUser.insertedId,
-            },
-        };
-
-        const authtoken = jwt.sign(payload, JWT_SECRET);
-        logger.info('User registered successfully');
-        res.json({ authtoken,email });
+        // Task 4: return the gifts using the res.json method
+        res.json(gifts); // Return the gifts in the response
     } catch (e) {
-        logger.error(e);
-        return res.status(500).send('Internal server error');
+        console.error('Error fetching gifts:', e);
+        res.status(500).send('Error fetching gifts');
     }
 });
 
-router.post('/login', async (req, res) => {
-    console.log("\n\n Inside login")
-
+router.get('/:id', async (req, res) => {
     try {
-        // const collection = await connectToDatabase();
-        const db = await connectToDatabase();
-        const collection = db.collection("users");
-        const theUser = await collection.findOne({ email: req.body.email });
+        const db = await connectToDatabase(); // Connect to database
 
-        if (theUser) {
-            let result = await bcryptjs.compare(req.body.password, theUser.password)
-            if(!result) {
-                logger.error('Passwords do not match');
-                return res.status(404).json({ error: 'Wrong pasword' });
-            }
-            let payload = {
-                user: {
-                    id: theUser._id.toString(),
-                },
-            };
+        // Task 2: use the collection() method to retrieve the gift collection
+        const collection = db.collection("gifts"); // Access the 'gifts' collection
 
-            const userName = theUser.firstName;
-            const userEmail = theUser.email;
+        const id = req.params.id; // Get the gift ID from the URL parameter
 
-            const authtoken = jwt.sign(payload, JWT_SECRET);
-            logger.info('User logged in successfully');
-            return res.status(200).json({ authtoken, userName, userEmail });
-        } else {
-            logger.error('User not found');
-            return res.status(404).json({ error: 'User not found' });
+        // Task 3: Find a specific gift by ID using the collection.findOne method and store it in 'gift'
+        const gift = await collection.findOne({ id: id }); // Find the gift by ID
+
+        if (!gift) {
+            return res.status(404).send('Gift not found'); // If no gift is found, return 404
         }
+
+        res.json(gift); // Return the found gift as a JSON response
     } catch (e) {
-        logger.error(e);
-        return res.status(500).json({ error: 'Internal server error', details: e.message });
-      }
+        console.error('Error fetching gift:', e);
+        res.status(500).send('Error fetching gift'); // If there's an error, return a 500 status
+    }
 });
 
-// update API
-router.put('/update', async (req, res) => {
-    // Task 2: Validate the input using `validationResult` and return approiate message if there is an error.
 
-    const errors = validationResult(req);
 
-    // Task 3: Check if `email` is present in the header and throw an appropriate error message if not present.
-    if (!errors.isEmpty()) {
-        logger.error('Validation errors in update request', errors.array());
-        return res.status(400).json({ errors: errors.array() });
-    }
 
+// Add a new gift
+router.post('/', async (req, res, next) => {
     try {
-        const email = req.headers.email;
-
-        if (!email) {
-            logger.error('Email not found in the request headers');
-            return res.status(400).json({ error: "Email not found in the request headers" });
-        }
-
-        //Task 4: Connect to MongoDB
         const db = await connectToDatabase();
-        const collection = db.collection("users");
+        const collection = db.collection("gifts");
+        const gift = await collection.insertOne(req.body);
 
-        //Task 5: Find user credentials
-        const existingUser = await collection.findOne({ email });
-
-        if (!existingUser) {
-            logger.error('User not found');
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        existingUser.firstName = req.body.name;
-        existingUser.updatedAt = new Date();
-
-        //Task 6: Update user credentials in DB
-        const updatedUser = await collection.findOneAndUpdate(
-            { email },
-            { $set: existingUser },
-            { returnDocument: 'after' }
-        );
-
-        //Task 7: Create JWT authentication with user._id as payload using secret key from .env file
-        const payload = {
-            user: {
-                id: updatedUser._id.toString(),
-            },
-        };
-
-        const authtoken = jwt.sign(payload, JWT_SECRET);
-        logger.info('User updated successfully');
-
-        res.json({ authtoken });
-    } catch (error) {
-        logger.error(error);
-        return res.status(500).send("Internal Server Error");
+        res.status(201).json(gift.ops[0]);
+    } catch (e) {
+        next(e);
     }
 });
+
 module.exports = router;
