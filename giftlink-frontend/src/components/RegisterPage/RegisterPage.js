@@ -18,7 +18,7 @@ return (
             <div className="col-md-6 col-lg-4">
                 <div className="register-card p-4 border rounded">
                     <h2 className="text-center mb-4 font-weight-bold">Register</h2>
-                    <div className="mb-3">
+                    <div className="mb-4">
                         <label htmlFor="firstName" className="form-label">FirstName</label>
                         <input
                             id="firstName"
@@ -32,7 +32,7 @@ return (
 
                     {/* last name */}
 
-                    <div className="mb-3">
+                    <div className="mb-4">
                         <label htmlFor="lastName" className="form-label">LastName</label>
                         <input
                             id="lastName"
@@ -45,7 +45,7 @@ return (
                     </div>
 
                     {/* email  */}
-                    <div className="mb-3">
+                    <div className="mb-4">
                         <label htmlFor="email" className="form-label">Email</label>
                         <input
                             id="email"
