@@ -1,82 +1,96 @@
-# Full Stack Capstone Project - GiftLink Website
+# Full Stack Capstone Project ( GiftLink-Website )
 
 ## Overview
-GiftLink is a full-stack web application designed to facilitate seamless gift-giving experiences. The project integrates a **Node.js Express backend** with a **React-based frontend**, ensuring a smooth and interactive user experience.
+GiftLink is a full-stack web application designed to streamline gift-giving by offering an intuitive platform to explore, select, and share gift recommendations. The application features a **Node.js Express backend** and a **React-based frontend**, ensuring a seamless user experience.
 
 ## Features
-- 🎁 **Gift Recommendation System**
-- 🔍 **User-friendly Search Functionality**
-- 🛒 **Seamless Gift Selection & Checkout**
-- 💬 **Sentiment Analysis Service** (to analyze gift preferences)
-- 🏗 **Containerized Deployment with Docker**
-- 🌐 **RESTful API Integration**
-- 🔐 **Secure User Authentication & Authorization**
+- 🎁 **User Authentication**: Secure login and registration.
+- 🔍 **Gift Search & Recommendation**: Users can explore curated gift suggestions.
+- 🛒 **Wishlist & Favorites**: Save favorite gifts for easy access.
+- 📦 **Order Management**: Track and manage gift orders.
+- 📊 **Sentiment Analysis Service**: Provides insights based on user preferences and feedback.
+- 🚀 **Containerized Deployment**: The entire application is Dockerized for efficient deployment.
 
-## Technologies Used
-### Backend:
-- **Node.js** & **Express.js** - Server-side logic & APIs
-- **MongoDB** - NoSQL database for storing gift data and user information
-- **JWT Authentication** - Secure user login & session management
-- **Docker** - Containerized deployment
-- **Sentiment Analysis Service** - To enhance gift suggestions
+## Tech Stack
+### Frontend
+- **React.js**
+- **Bootstrap / Tailwind CSS**
 
-### Frontend:
-- **React.js** - Dynamic and interactive UI
-- **Redux** - State management for a seamless experience
-- **Bootstrap/Tailwind CSS** - Responsive design
+### Backend
+- **Node.js & Express.js**
+- **MongoDB (Database)**
 
-## Setup & Installation
+### Deployment & DevOps
+- **Docker** (Containerization)
+- **GitHub Actions** (CI/CD Pipeline)
+- **Nginx** (Reverse Proxy)
+
+## Project Structure
+```
+📂 fullstack-capstone-project
+ ├── 📂 giftlink-frontend  # React frontend
+ ├── 📂 giftlink-backend   # Node.js/Express backend
+ ├── 📂 giftwebsite        # Main web assets
+ ├── 📂 sentiment          # Sentiment Analysis Service
+ ├── 📂 .github            # CI/CD Configuration
+ ├── 📄 .gitignore
+ ├── 📄 LICENSE
+ ├── 📄 README.md
+```
+ 
+## User Stories & Issue Tracking (user stories or issues are little bit different then this)
+To ensure efficient project management, **9 user stories/issues** were created and tracked:
+1. **User Registration & Authentication** ✅
+2. **Gift Search & Filter Feature** ✅
+3. **Add to Wishlist Functionality** ✅
+4. **Order Placement & Tracking** ✅
+5. **Sentiment Analysis Service Integration** ✅
+6. **Frontend UI Improvements** ✅
+7. **API Integration for Recommendations** ✅
+8. **Containerization & Deployment** ✅
+9. **Bug Fixes & Performance Optimization** ✅
+
+## Installation & Setup
 ### Prerequisites
 Ensure you have the following installed:
-- [Node.js](https://nodejs.org/)
-- [Docker](https://www.docker.com/)
-- [MongoDB](https://www.mongodb.com/)
-- [React.js](https://reactjs.org/)
+- **Node.js** & **npm**
+- **MongoDB**
+- **Docker** (for deployment)
 
 ### Steps to Run Locally
-#### 1️⃣ Clone the Repository:
-```bash
- git clone https://github.com/MuhammadAsad878/fullstack-capstone-project.git
- cd fullstack-capstone-project
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/MuhammadAsad878/fullstack-capstone-project.git
+   cd fullstack-capstone-project
+   ```
+2. Install dependencies for backend and frontend:
+   ```sh
+   cd giftlink-backend && npm install
+   cd ../giftlink-frontend && npm install
+   ```
+3. Start the backend:
+   ```sh
+   cd giftlink-backend
+   npm start
+   ```
+4. Start the frontend:
+   ```sh
+   cd ../giftlink-frontend
+   npm start
+   ```
+
+### Running with Docker
+To deploy using Docker:
+```sh
+docker-compose up --build
 ```
-#### 2️⃣ Install Dependencies:
-##### Backend Setup:
-```bash
- cd giftlink-backend
- npm install
-```
-##### Frontend Setup:
-```bash
- cd ../giftlink-frontend
- npm install
-```
-#### 3️⃣ Start the Application:
-##### Backend:
-```bash
- npm start
-```
-##### Frontend:
-```bash
- npm start
-```
-The app should now be running at **http://localhost:3000/** (or as configured).
 
 ## Deployment
-To containerize and deploy the project using **Docker**, run:
-```bash
- docker-compose up --build
-```
-This will set up both the backend and frontend in Docker containers.
-
-## Future Improvements
-- 🎯 **Enhance Gift Recommendation Algorithm**
-- 📊 **Add AI-Powered Personalized Suggestions**
-- 🏆 **Integrate Payment Gateway**
-- 📱 **Mobile-Responsive Enhancements**
+The application is **containerized** and can be deployed on **AWS, Heroku, or DigitalOcean** using **GitHub Actions** for automated deployment.
 
 ## License
 This project is licensed under the **Apache-2.0 License**.
 
 ---
-🚀 Happy Coding! If you have any suggestions or issues, feel free to contribute! 😊
+🚀 **Developed by Muhammad Asad**
 
